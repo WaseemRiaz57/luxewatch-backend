@@ -7,12 +7,21 @@ import routes from './routes';
 const app: Application = express();
 
 // 1. GLOBAL MIDDLEWARE
-app.use(cors());
+// 👇 UPDATE: Sirf apne Vercel domain ko allow karein
+app.use(cors({
+  origin: [
+    "http://localhost:3000", 
+    "https://client-tau-neon.vercel.app" // 👈 Aapka Vercel domain
+  ],
+  credentials: true
+}));
+
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },
 }));
 
-// 👇 FIX: Use process.cwd() for robust path resolution
+// 2. STATIC FILES
+// Development ke liye sahi hai, lekin Production (Render) par Cloudinary best hai
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // 3. BODY PARSER
